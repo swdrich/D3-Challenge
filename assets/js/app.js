@@ -53,14 +53,23 @@ function drawScatter() {
         // Create Scale Functions
         var povertyScale = d3.scaleLinear()
             .domain([0, d3.max(healthData, d => d.poverty)])
-            .range([height, 0]);
+            .range([0, width]);
 
         var obesityScale = d3.scaleLinear()
             .domain([0, d3.max(healthData, d => d.obesity)])
             .range([height, 0]);
 
-        
+        // Create axes
+        var povertyAxis = d3.axisBottom(povertyScale);
+        var obesityAxis = d3.axisLeft(obesityScale);
 
+        // Add axes to chart
+        chartGroup.append("g")
+            .attr("transform", `translate(0, ${height})`)
+            .call(povertyAxis);
+
+        chartGroup.append("g")
+            .call(obesityAxis);
 
     });
 
