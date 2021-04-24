@@ -35,25 +35,47 @@ function drawScatter() {
         .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
     // Read in the data
-    d3.csv("assets/data/data.csv").then(function(data) {
-        console.log(data);
+    d3.csv("assets/data/data.csv").then(function(healthData) {
+        console.log(healthData);
+
+        // Loop through data and parse as numbers
+        healthData.forEach(function(data) {
+            data.age = +data.age;
+            data.healthcare = +data.healthcare;
+            data.id = +data.id;
+            data.income = +data.income;
+            data.obesity = +data.obesity;
+            data.poverty = +data.poverty;
+            data.smokes = +data.smokes;
+
+        });
+
+        // Create Scale Functions
+        var povertyScale = d3.scaleLinear()
+            .domain([0, d3.max(healthData, d => d.poverty)])
+            .range([height, 0]);
+
+        var obesityScale = d3.scaleLinear()
+            .domain([0, d3.max(healthData, d => d.obesity)])
+            .range([height, 0]);
+
+        
+
+
     });
 
 };
 
-drawScatter();
+
 // This is a function to redraw the plot based on window size
-// function makeResponsive() {
-//     console.log("makeResponsive");
+function makeResponsive() {
+    console.log("makeResponsive");
 
-//     drawScatter();
+    drawScatter();
 
 
-// };
+};
 // // This base code taken directly from D3 scatterplot section
-
-// //Read the data
-// d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/2_TwoNum.csv", function(data) {
 
 //   // Add X axis
 //   var x = d3.scaleLinear()
@@ -85,4 +107,4 @@ drawScatter();
 
 // </script>
 
-// makeResponsive();
+makeResponsive();
