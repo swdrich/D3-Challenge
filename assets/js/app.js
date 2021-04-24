@@ -16,9 +16,9 @@ function drawScatter() {
 
     var margin = {
         top: 50,
-        right: 50,
+        right: 100,
         bottom: 50,
-        left: 50
+        left: 30
     };
 
     var height = svgHeight - margin.top - margin.bottom;
@@ -52,11 +52,11 @@ function drawScatter() {
 
         // Create Scale Functions
         var povertyScale = d3.scaleLinear()
-            .domain([0, d3.max(healthData, d => d.poverty)])
+            .domain([8, d3.max(healthData, d => d.poverty)])
             .range([0, width]);
 
         var obesityScale = d3.scaleLinear()
-            .domain([0, d3.max(healthData, d => d.obesity)])
+            .domain([18, d3.max(healthData, d => d.obesity)])
             .range([height, 0]);
 
         // Create axes
@@ -70,6 +70,20 @@ function drawScatter() {
 
         chartGroup.append("g")
             .call(obesityAxis);
+
+        //console.log(healthData.poverty);
+
+        // Plot data
+        chartGroup.append("g")
+            .selectAll("dot")
+            .data(healthData)
+            .enter()
+            .append("circle")
+                .attr("cx", d => povertyScale(d.poverty))
+                .attr("cy", d => obesityScale(d.obesity))
+                .attr("r", "15")
+                .attr("fill", "blue")
+                .attr("opacity", ".75");
 
     });
 
@@ -85,21 +99,6 @@ function makeResponsive() {
 
 };
 // // This base code taken directly from D3 scatterplot section
-
-//   // Add X axis
-//   var x = d3.scaleLinear()
-//     .domain([0, 4000])
-//     .range([ 0, width ]);
-//   svg.append("g")
-//     .attr("transform", "translate(0," + height + ")")
-//     .call(d3.axisBottom(x));
-
-//   // Add Y axis
-//   var y = d3.scaleLinear()
-//     .domain([0, 500000])
-//     .range([ height, 0]);
-//   svg.append("g")
-//     .call(d3.axisLeft(y));
 
 //   // Add dots
 //   svg.append('g')
