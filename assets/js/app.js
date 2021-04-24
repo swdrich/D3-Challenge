@@ -73,6 +73,22 @@ function drawScatter() {
 
         //console.log(healthData.poverty);
 
+        // // Create data points
+        // var dataPoints = svg.selectAll("dot")
+        //     .data(healthData)
+        //     .enter()
+        //     .append("g");
+
+        // dataPoints.append("circle")
+        //     .attr("cx", d => povertyScale(d.poverty))
+        //     .attr("cy", d => obesityScale(d.obesity))
+        //     .attr("r", "15")
+        //     .attr("fill", "blue")
+        //     .attr("opacity", ".75");
+
+        // dataPoints.append("text")
+
+
         // Plot data
         chartGroup.append("g")
             .selectAll("dot")
@@ -83,8 +99,18 @@ function drawScatter() {
                 .attr("cy", d => obesityScale(d.obesity))
                 .attr("r", "15")
                 .attr("fill", "blue")
-                .attr("opacity", ".75");
+                .attr("opacity", ".75")
+            .append("text")
+                .text(d => d.abbr)
+                .attr("x", d => povertyScale(d.poverty))
+                .attr("y", d => obesityScale(d.obesity))
+                .attr("dx", -5)
+                .attr("dy", 2)
+                .style("font-size", "7px");
 
+    // Catch errors
+    }).catch(e => {
+        console.log(e);
     });
 
 };
@@ -95,24 +121,9 @@ function makeResponsive() {
     console.log("makeResponsive");
 
     drawScatter();
-
-
 };
-// // This base code taken directly from D3 scatterplot section
-
-//   // Add dots
-//   svg.append('g')
-//     .selectAll("dot")
-//     .data(data)
-//     .enter()
-//     .append("circle")
-//       .attr("cx", function (d) { return x(d.GrLivArea); } )
-//       .attr("cy", function (d) { return y(d.SalePrice); } )
-//       .attr("r", 1.5)
-//       .style("fill", "#69b3a2")
-
-// })
-
-// </script>
 
 makeResponsive();
+
+// Resize as browser window changes
+d3.select(window).on("resize", makeResponsive);
