@@ -17,8 +17,8 @@ function drawScatter() {
     var margin = {
         top: 50,
         right: 100,
-        bottom: 50,
-        left: 30
+        bottom: 80,
+        left: 50
     };
 
     var height = svgHeight - margin.top - margin.bottom;
@@ -71,24 +71,6 @@ function drawScatter() {
         chartGroup.append("g")
             .call(obesityAxis);
 
-        //console.log(healthData.poverty);
-
-        // // Create data points
-        // var dataPoints = svg.selectAll("dot")
-        //     .data(healthData)
-        //     .enter()
-        //     .append("g");
-
-        // dataPoints.append("circle")
-        //     .attr("cx", d => povertyScale(d.poverty))
-        //     .attr("cy", d => obesityScale(d.obesity))
-        //     .attr("r", "15")
-        //     .attr("fill", "blue")
-        //     .attr("opacity", ".75");
-
-        // dataPoints.append("text")
-
-
         // Plot data
         chartGroup.append("g")
             .selectAll("dot")
@@ -99,8 +81,9 @@ function drawScatter() {
                 .attr("cy", d => obesityScale(d.obesity))
                 .attr("r", "15")
                 .attr("fill", "blue")
-                .attr("opacity", ".75");
+                .attr("opacity", ".65");
 
+        // Add text to points
         chartGroup.append("text")
         .style("font-size", "12px")
         .style("fill", "white")
@@ -117,6 +100,25 @@ function drawScatter() {
             .text(function(data) {
                 return data.abbr
             });
+
+        // Create group for labels
+        var labelsGroup = chartGroup.append("g")
+            .attr("transform", `translate ${width / 2}, ${height + 20}`);
+
+        // Create labels
+        var povertyLabels = labelsGroup.append("text")
+            .attr("x", width / 2)
+            .attr("y", height + 40)
+            .attr("value", "poverty")
+            .classed("active", true)
+            .text("Percent At or Below Poverty Rate");
+
+        var obesityLabels = labelsGroup.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", (20 - margin.left))
+            .attr("x", (0 - height/2))
+            .classed ("active", true)
+            .text("Obesity Rate (%)");
             
     // Catch errors
     }).catch(e => {
