@@ -99,15 +99,25 @@ function drawScatter() {
                 .attr("cy", d => obesityScale(d.obesity))
                 .attr("r", "15")
                 .attr("fill", "blue")
-                .attr("opacity", ".75")
-            .append("text")
-                .text(d => d.abbr)
-                .attr("x", d => povertyScale(d.poverty))
-                .attr("y", d => obesityScale(d.obesity))
-                .attr("dx", -5)
-                .attr("dy", 2)
-                .style("font-size", "7px");
+                .attr("opacity", ".75");
 
+        chartGroup.append("text")
+        .style("font-size", "12px")
+        .style("fill", "white")
+        .selectAll("tspan")
+        .data(healthData)
+        .enter()
+        .append("tspan")
+            .attr("x", function(data) {
+                return povertyScale(data.poverty - 0.08);
+            })
+            .attr("y", function(data) {
+                return obesityScale(data.obesity - .15);
+            })
+            .text(function(data) {
+                return data.abbr
+            });
+            
     // Catch errors
     }).catch(e => {
         console.log(e);
