@@ -95,6 +95,15 @@ function drawScatter() {
         return circlesGroup;
     }
 
+    // Function to update text positions
+    function renderText(textGroup, newXScale, chosenXAxis, newYScale, chosenYAxis) {
+
+        textGroup.transition()
+            .duration(1000)
+            .attr("x", d => newXScale(d[chosenXAxis]))
+            .attr("y", d => newYScale(d[chosenYAxis]));
+    }
+
     // function used for updating circles group with new tooltip
     function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
 
@@ -160,68 +169,74 @@ function drawScatter() {
 
         });
 
-        // Create Scale Functions
-        var povertyScale = d3.scaleLinear()
-            .domain([8, d3.max(healthData, d => d.poverty)])
-            .range([0, width]);
+        // Instantiate Scale Functions
+        var xLinearScale = xScale(healthData, chosenXAxis);
 
-        var obesityScale = d3.scaleLinear()
-            .domain([18, d3.max(healthData, d => d.obesity)])
-            .range([height, 0]);
+        var yLinearScale = yScale(healthData, chosenYAxis);
 
-        // Create axes
-        var povertyAxis = d3.axisBottom(povertyScale);
-        var obesityAxis = d3.axisLeft(obesityScale);
+        // Instantiate axes
+        var bottomAxis = d3.axisBottom(xLinearScale);
+        var leftAxis = d3.axisLeft(yLinearScale);
 
         // Add axes to chart
         chartGroup.append("g")
             .attr("transform", `translate(0, ${height})`)
-            .call(povertyAxis);
+            .call(bottomAxis);
 
         chartGroup.append("g")
-            .call(obesityAxis);
+            .call(leftAxis);
 
-        // Plot data
-        chartGroup.append("g")
-            .selectAll("dot")
+        // Append initial data
+        var circlesGroup = chartGroup.selectAll("circle")
             .data(healthData)
             .enter()
             .append("circle")
-                .attr("cx", d => povertyScale(d.poverty))
-                .attr("cy", d => obesityScale(d.obesity))
-                .attr("r", "15")
-                .attr("fill", "blue")
-                .attr("opacity", ".65");
-
-        // Add text to points
-        chartGroup.append("text")
-        .style("font-size", "12px")
-        .style("fill", "white")
-        .selectAll("tspan")
-        .data(healthData)
-        .enter()
-        .append("tspan")
-            .attr("x", function(data) {
-                return povertyScale(data.poverty - 0.08);
+            .classed("stateCircle", true)
+                .attr("cx", d => xLinearScale(d[chosenXAxis]))
+                .attr("cy", d => yLinearScale(d[chosenYAxis]))
+                .attr("r", "15");
+                
+        // Append initial text
+        var textGroup = chartGroup.selectAll("null")
+            .data(healthData)
+            .enter()
+            .append("text")
+            .classed("stateText", true)
+            .attr("x", function(d) {
+                return xLinearScale(d[chosenXAxis]);
             })
-            .attr("y", function(data) {
-                return obesityScale(data.obesity - .15);
+            .attr("y", function(d) {
+                return yLinearScale(d[chosenYAxis] + 0.2);
             })
-            .text(function(data) {
-                return data.abbr
+            .text(function(d) {
+                return d.abbr
             });
 
-        // Create group for labels
-        var labelsGroup = chartGroup.append("g")
+        // Create group for x labels
+        var xLabelsGroup = chartGroup.append("g")
             .attr("transform", `translate ${width / 2}, ${height + 20}`);
 
-        // Create labels
-        var povertyLabels = labelsGroup.append("text")
+        // Create x labels
+        var povertyLabel = labelsGroup.append("text")
             .attr("x", width / 2)
             .attr("y", height + 40)
             .attr("value", "poverty")
             .classed("active", true)
             .text("Percent At or Below Poverty Rate");
+
+        var ageLabel = labelsGroup.append("text")
+            .attr("x", width / 2)
+            .attr("y", height + 60)
+            .attr("value", "age")
+            .classed("inactive", true)
+            .text("Median Age");
+
+        var incomeLabel = labelsGroup.append("text")
+            .attr("x", width / 2)
+            .attr("y", height + 80)
+            .attr("value", "income")
+            .classed("inactive", true)
+            .text("Median Household Income");
 
         var obesityLabels = labelsGroup.append("text")
             .attr("transform", "rotate(-90)")
