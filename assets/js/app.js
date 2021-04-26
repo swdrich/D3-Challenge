@@ -18,7 +18,7 @@ function drawScatter() {
         top: 50,
         right: 100,
         bottom: 80,
-        left: 50
+        left: 80
     };
 
     var height = svgHeight - margin.top - margin.bottom;
@@ -217,33 +217,48 @@ function drawScatter() {
             .attr("transform", `translate ${width / 2}, ${height + 20}`);
 
         // Create x labels
-        var povertyLabel = labelsGroup.append("text")
+        var povertyLabel = xLabelsGroup.append("text")
             .attr("x", width / 2)
             .attr("y", height + 40)
             .attr("value", "poverty")
             .classed("active", true)
             .text("Percent At or Below Poverty Rate");
 
-        var ageLabel = labelsGroup.append("text")
+        var ageLabel = xLabelsGroup.append("text")
             .attr("x", width / 2)
             .attr("y", height + 60)
             .attr("value", "age")
             .classed("inactive", true)
             .text("Median Age");
 
-        var incomeLabel = labelsGroup.append("text")
+        var incomeLabel = xLabelsGroup.append("text")
             .attr("x", width / 2)
             .attr("y", height + 80)
             .attr("value", "income")
             .classed("inactive", true)
             .text("Median Household Income");
 
-        var obesityLabels = labelsGroup.append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", (20 - margin.left))
+        // Create group for y labels
+        var yLabelsGroup = chartGroup.append("g")
+            .attr("transform", "rotate(-90)");
+
+        var obesityLabel = yLabelsGroup.append("text")
+            .attr("y", (50 - margin.left))
             .attr("x", (0 - height/2))
             .classed ("active", true)
             .text("Obesity Rate (%)");
+
+        var smokesLabel = yLabelsGroup.append("text")
+            .attr("y", (30 - margin.left))
+            .attr("x", (0 - height/2))
+            .classed("inactive", true)
+            .text("Smokes (%)");
+
+        var healthcareLabel = yLabelsGroup.append("text")
+            .attr("y", (10 - margin.left))
+            .attr("x", (0 - height/2))
+            .classed("inactive", true)
+            .text("Lacks Healthcare (%)");
 
         // Create tooltip
         var toolTip = d3.select("body")
