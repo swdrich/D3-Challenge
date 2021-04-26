@@ -34,6 +34,116 @@ function drawScatter() {
     var chartGroup = svg.append("g")
         .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
+    // Functions below are for bonus challenge using multipe axes
+    // Initialize starting values for axes
+    var chosenXAxis = "poverty";
+    var chosenYAxis = "obesity";
+
+    // Functions to define axis scales
+    function xScale(healthData, chosenXAxis) {
+        // create scales
+        var xLinearScale = d3.scaleLinear()
+          .domain([d3.min(healthData, d => d[chosenXAxis]) * 0.8,
+            d3.max(healthData, d => d[chosenXAxis]) * 1.2
+          ])
+          .range([0, width]);
+      
+        return xLinearScale;
+    };
+    
+    function yScale(healthData, chosenYAxis) {
+        // create scales
+        var yLinearScale = d3.scaleLinear()
+            .domain([d3.max(healthData, d => d[chosenYAxis]) * 1.2,
+              d3.min(healthData, d => d[chosenYAxis]) * 0.8
+            ])
+            .range([height, 0]);
+
+        return yLinearScale;
+    };
+      
+    // function used for updating xAxis var upon click on axis label
+    function renderXAxis(newXScale, xAxis) {
+        var bottomAxis = d3.axisBottom(newXScale);
+  
+        xAxis.transition()
+            .duration(1000)
+            .call(bottomAxis);
+
+        return xAxis;
+    }
+
+    // Function used for updation Y axis var on click
+    function renderYAxis(newYScale, yAxis) {
+        var leftAxis = d3.axisLeft(newYScale);
+
+        yAxis.transition()
+            .duration(1000)
+            .call(leftAxis);
+
+        return yAxis;    
+    }
+
+    // Function to update circle positions
+    function renderCircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYAxis) {
+
+        circlesGroup.transition()
+            .duration(1000)
+            .attr("cx", d => newXScale(d[chosenXAxis]))
+            .attr("cy", d => newYScale(d[chosenYAxis]));
+
+        return circlesGroup;
+    }
+
+    // function used for updating circles group with new tooltip
+    function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
+
+        var xLabel;
+    
+        if (chosenXAxis === "poverty") {
+            label = "% in Poverty:";
+        }
+        else if (chosenXAxis === "age") {
+            label = "Median Age:";
+        }
+        else {
+            label = "Median Household Income";
+        };
+
+        var yLabel;
+
+        if (chosenYAxis === "obesity") {
+            label = "Obesity:";
+        }
+        else if (chosenYAxis === "smokes") {
+            label = "Smokes:";
+        }
+        else {
+            label = "Lacks Healthcare:";
+        };
+    
+        var toolTip = d3.tip()
+        .attr("class", "d3-tip")
+        .offset([80, -60])
+        .html(function(d) {
+            return (`${xLabel} ${d[chosenXAxis]}<br>${yLabel} ${d[chosenYAxis]}`);
+        });
+    
+        circlesGroup.call(toolTip);
+    
+        circlesGroup.on("mouseover", function(data) {
+        toolTip.show(data);
+        })
+        // onmouseout event
+        .on("mouseout", function(data, index) {
+            toolTip.hide(data);
+        });
+    
+        return circlesGroup;
+    }
+  
+  
+      
     // Read in the data
     d3.csv("assets/data/data.csv").then(function(healthData) {
         console.log(healthData);
@@ -119,6 +229,17 @@ function drawScatter() {
             .attr("x", (0 - height/2))
             .classed ("active", true)
             .text("Obesity Rate (%)");
+
+        // Create tooltip
+        var toolTip = d3.select("body")
+            .append("div")
+            .attr("class", "d3-tip");
+
+        // Create event handlers
+
+        var dotGroup = d3.selectAll("circle");
+
+        dotGroup.on("mouseover", )
             
     // Catch errors
     }).catch(e => {
