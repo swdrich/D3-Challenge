@@ -37,7 +37,7 @@ function drawScatter() {
     // Functions below are for bonus challenge using multipe axes
     // Initialize starting values for axes
     var chosenXAxis = "poverty";
-    var chosenYAxis = "obesity";
+    var chosenYAxis = "healthcare";
 
     // Functions to define axis scales
     function xScale(healthData, chosenXAxis) {
@@ -57,7 +57,7 @@ function drawScatter() {
             .domain([d3.max(healthData, d => d[chosenYAxis]) * 1.2,
               d3.min(healthData, d => d[chosenYAxis]) * 0.8
             ])
-            .range([height, 0]);
+            .range([0, height]);
 
         return yLinearScale;
     };
@@ -101,7 +101,7 @@ function drawScatter() {
         textGroup.transition()
             .duration(1000)
             .attr("x", d => newXScale(d[chosenXAxis]))
-            .attr("y", d => newYScale(d[chosenYAxis]));
+            .attr("y", d => newYScale(d[chosenYAxis] - 0.15));
 
         return textGroup;
     };
@@ -119,14 +119,14 @@ function drawScatter() {
             var xLabel = "Median Household Income: ";
         };
 
-        if (chosenYAxis === "obesity") {
-            var yLabel = "Obesity (%): ";
+        if (chosenYAxis === "healthcare") {
+            var yLabel = "Lacks Healthcare (%): ";
         }
         else if (chosenYAxis === "smokes") {
             var yLabel = "Smokers (%): ";
         }
         else {
-            var yLabel = "Lacks Healthcare (%): ";
+            var yLabel = "Obesity (%): ";
         };
     
         var toolTip = d3.tip()
@@ -202,7 +202,7 @@ function drawScatter() {
             .append("text")
             .classed("stateText", true)
             .attr("x", d => xLinearScale(d[chosenXAxis]))
-            .attr("y", d => yLinearScale(d[chosenYAxis] + 0.2))
+            .attr("y", d => yLinearScale(d[chosenYAxis] - 0.15))
             .text(d => (d.abbr));
 
         // Create group for x labels
@@ -233,12 +233,12 @@ function drawScatter() {
             .attr("transform", "rotate(-90)");
 
         // Create y labels
-        var obesityLabel = yLabelsGroup.append("text")
-            .attr("y", (50 - margin.left))
+        var healthcareLabel = yLabelsGroup.append("text")
+            .attr("y", (10 - margin.left))
             .attr("x", (0 - height/2))
-            .attr("value", "obesity")
-            .classed ("active", true)
-            .text("Obesity Rate (%)");
+            .attr("value", "healthcare")
+            .classed("active", true)
+            .text("Lacks Healthcare (%)");
 
         var smokesLabel = yLabelsGroup.append("text")
             .attr("y", (30 - margin.left))
@@ -247,12 +247,13 @@ function drawScatter() {
             .classed("inactive", true)
             .text("Smokes (%)");
 
-        var healthcareLabel = yLabelsGroup.append("text")
-            .attr("y", (10 - margin.left))
+        var obesityLabel = yLabelsGroup.append("text")
+            .attr("y", (50 - margin.left))
             .attr("x", (0 - height/2))
-            .attr("value", "healthcare")
-            .classed("inactive", true)
-            .text("Lacks Healthcare (%)");
+            .attr("value", "obesity")
+            .classed ("inactive", true)
+            .text("Obesity Rate (%)");
+
 
         // Update tooltip
         var circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
@@ -337,14 +338,14 @@ function drawScatter() {
                 }
 
                 // Update classes to change bold text
-                if (chosenYAxis === "obesity") {
-                    obesityLabel
+                if (chosenYAxis === "healthcare") {
+                    healthcareLabel
                         .classed("active", true)
                         .classed("inactive", false);
-                    smokesLabel
+                    obesityLabel
                         .classed("active", false)
                         .classed("inactive", true);
-                    healthcareLabel
+                    smokesLabel
                         .classed("active", false)
                         .classed("inactive", true);
                 }
@@ -360,13 +361,13 @@ function drawScatter() {
                         .classed("inactive", true);
                 }
                 else {
-                    healthcareLabel
+                    obesityLabel
                         .classed("active", true)
                         .classed("inactive", false);
-                    obesityLabel
+                    smokesLabel
                         .classed("active", false)
                         .classed("inactive", true);
-                    smokesLabel
+                    healthcareLabel
                         .classed("active", false)
                         .classed("inactive", true);
                 };
