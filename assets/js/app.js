@@ -18,7 +18,7 @@ function drawScatter() {
         top: 50,
         right: 100,
         bottom: 80,
-        left: 80
+        left: 100
     };
 
     var height = svgHeight - margin.top - margin.bottom;
@@ -109,35 +109,31 @@ function drawScatter() {
     // function used for updating circles group with new tooltip
     function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
 
-        var xLabel;
-    
         if (chosenXAxis === "poverty") {
-            label = "% in Poverty:";
+            var xLabel = "% in Poverty:";
         }
         else if (chosenXAxis === "age") {
-            label = "Median Age:";
+            var xLabel = "Median Age:";
         }
         else {
-            label = "Median Household Income";
+            var xLabel = "Median Household Income";
         };
 
-        var yLabel;
-
         if (chosenYAxis === "obesity") {
-            label = "Obesity:";
+            var yLabel = "Obesity:";
         }
         else if (chosenYAxis === "smokes") {
-            label = "Smokes:";
+            var yLabel = "Smokes:";
         }
         else {
-            label = "Lacks Healthcare:";
+            var yLabel = "Lacks Healthcare:";
         };
     
         var toolTip = d3.tip()
         .attr("class", "d3-tip")
-        .offset([30, -30])
+        .offset([120, -60])
         .html(function(d) {
-            return (`${xLabel} ${d[chosenXAxis]}<br>${yLabel} ${d[chosenYAxis]}`);
+            return (`${d.state}<br>${xLabel} ${d[chosenXAxis]}<br>${yLabel} ${d[chosenYAxis]}`);
         });
     
         circlesGroup.call(toolTip);
@@ -329,61 +325,61 @@ function drawScatter() {
         yLabelsGroup.selectAll("text")
             .on("click", function() {
 
-            // Update Y coordinates
-            var yValue = d3.select(this).attr("value");
-            if (yValue !== chosenYAxis) {
-                chosenYAxis = yValue;
+                // Update Y coordinates
+                var yValue = d3.select(this).attr("value");
+                if (yValue !== chosenYAxis) {
+                    chosenYAxis = yValue;
 
-                console.log(chosenYAxis);
+                    console.log(chosenYAxis);
 
-                // update y scale
-                yLinearScale = yScale(healthData, chosenYAxis);
+                    // update y scale
+                    yLinearScale = yScale(healthData, chosenYAxis);
 
-                // update y axis
-                yAxis = renderYAxis(yLinearScale, yAxis);
-            };
+                    // update y axis
+                    yAxis = renderYAxis(yLinearScale, yAxis);
+                };
 
-            // Update classes to change bold text
-            if (chosenYAxis === "obesity") {
-                obesityLabel
-                    .classed("active", true)
-                    .classed("inactive", false);
-                smokesLabel
-                    .classed("active", false)
-                    .classed("inactive", true);
-                healthcareLabel
-                    .classed("active", false)
-                    .classed("inactive", true);
-            }
-            else if (chosenYAxis === "smokes") {
-                smokesLabel
-                    .classed("active", true)
-                    .classed("inactive", false);
-                healthcareLabel
-                    .classed("active", false)
-                    .classed("inactive", true);
-                obesityLabel
-                    .classed("active", false)
-                    .classed("inactive", true);
-            }
-            else {
-                healthcareLabel
-                    .classed("active", true)
-                    .classed("inactive", false);
-                obesityLabel
-                    .classed("active", false)
-                    .classed("inactive", true);
-                smokesLabel
-                    .classed("active", false)
-                    .classed("inactive", true);
-            };
+                // Update classes to change bold text
+                if (chosenYAxis === "obesity") {
+                    obesityLabel
+                        .classed("active", true)
+                        .classed("inactive", false);
+                    smokesLabel
+                        .classed("active", false)
+                        .classed("inactive", true);
+                    healthcareLabel
+                        .classed("active", false)
+                        .classed("inactive", true);
+                }
+                else if (chosenYAxis === "smokes") {
+                    smokesLabel
+                        .classed("active", true)
+                        .classed("inactive", false);
+                    healthcareLabel
+                        .classed("active", false)
+                        .classed("inactive", true);
+                    obesityLabel
+                        .classed("active", false)
+                        .classed("inactive", true);
+                }
+                else {
+                    healthcareLabel
+                        .classed("active", true)
+                        .classed("inactive", false);
+                    obesityLabel
+                        .classed("active", false)
+                        .classed("inactive", true);
+                    smokesLabel
+                        .classed("active", false)
+                        .classed("inactive", true);
+                };
                
-            // Update circles
-            circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
+                // Update circles
+                circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
 
-            // Update text
-            textGroup = renderText(textGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
-        });
+                // Update text
+                textGroup = renderText(textGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
+            });
          
     // Catch errors
     }).catch(e => {
