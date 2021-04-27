@@ -11,8 +11,8 @@ function drawScatter() {
     }
 
     // Create SVG area based on window size
-    var svgWidth = window.innerWidth;
-    var svgHeight = window.innerHeight;
+    var svgWidth = window.innerWidth * 0.9;
+    var svgHeight = window.innerHeight * 0.9;
 
     var margin = {
         top: 50,
@@ -236,18 +236,21 @@ function drawScatter() {
         var obesityLabel = yLabelsGroup.append("text")
             .attr("y", (50 - margin.left))
             .attr("x", (0 - height/2))
+            .attr("value", "obesity")
             .classed ("active", true)
             .text("Obesity Rate (%)");
 
         var smokesLabel = yLabelsGroup.append("text")
             .attr("y", (30 - margin.left))
             .attr("x", (0 - height/2))
+            .attr("value", "smokes")
             .classed("inactive", true)
             .text("Smokes (%)");
 
         var healthcareLabel = yLabelsGroup.append("text")
             .attr("y", (10 - margin.left))
             .attr("x", (0 - height/2))
+            .attr("value", "healthcare")
             .classed("inactive", true)
             .text("Lacks Healthcare (%)");
 
@@ -271,7 +274,7 @@ function drawScatter() {
 
                     // update x axis
                     xAxis = renderXAxis(xLinearScale, xAxis);
-                };
+                }
 
                 // Update classes to change bold text
                 if (chosenXAxis === "poverty") {
@@ -331,7 +334,7 @@ function drawScatter() {
 
                     // update y axis
                     yAxis = renderYAxis(yLinearScale, yAxis);
-                };
+                }
 
                 // Update classes to change bold text
                 if (chosenYAxis === "obesity") {
