@@ -201,15 +201,9 @@ function drawScatter() {
             .enter()
             .append("text")
             .classed("stateText", true)
-            .attr("x", function(d) {
-                return xLinearScale(d[chosenXAxis]);
-            })
-            .attr("y", function(d) {
-                return yLinearScale(d[chosenYAxis] + 0.2);
-            })
-            .text(function(d) {
-                return d.abbr
-            });
+            .attr("x", d => xLinearScale(d[chosenXAxis]))
+            .attr("y", d => yLinearScale(d[chosenYAxis] + 0.2))
+            .text(d => (d.abbr));
 
         // Create group for x labels
         var xLabelsGroup = chartGroup.append("g")
