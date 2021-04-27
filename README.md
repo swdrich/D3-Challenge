@@ -10,5 +10,5 @@ For this project, I used [D3](https://d3js.org/), JavaScript, HTML, and CSS to b
 
 To view and interact with the dashboard:
 
-1: Clone repo to your own machine.
-2: Launch website using VSC Live Server or other local server of your choice.
+1. Clone repo to your own machine.
+1. Launch website using VSC Live Server or other local server of your choice.
