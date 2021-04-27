@@ -71,7 +71,7 @@ function drawScatter() {
             .call(bottomAxis);
 
         return xAxis;
-    }
+    };
 
     // Function used for updation Y axis var on click on axis label
     function renderYAxis(newYScale, yAxis) {
@@ -82,7 +82,7 @@ function drawScatter() {
             .call(leftAxis);
 
         return yAxis;    
-    }
+    };
 
     // Function to update circle positions
     function renderCircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYAxis) {
@@ -93,7 +93,7 @@ function drawScatter() {
             .attr("cy", d => newYScale(d[chosenYAxis]));
 
         return circlesGroup;
-    }
+    };
 
     // Function to update text positions
     function renderText(textGroup, newXScale, chosenXAxis, newYScale, chosenYAxis) {
@@ -102,7 +102,9 @@ function drawScatter() {
             .duration(1000)
             .attr("x", d => newXScale(d[chosenXAxis]))
             .attr("y", d => newYScale(d[chosenYAxis]));
-    }
+
+        return textGroup;
+    };
 
     // function used for updating circles group with new tooltip
     function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
@@ -150,13 +152,13 @@ function drawScatter() {
         });
     
         return circlesGroup;
-    }
-  
+    };
   
       
     // Read in the data
-    d3.csv("assets/data/data.csv").then(function(healthData) {
+    d3.csv("assets/data/data.csv").then(function(healthData, err) {
         console.log(healthData);
+        if (err) throw err;
 
         // Loop through data and parse as numbers
         healthData.forEach(function(data) {
@@ -180,11 +182,11 @@ function drawScatter() {
         var leftAxis = d3.axisLeft(yLinearScale);
 
         // Add axes to chart
-        chartGroup.append("g")
+        var xAxis = chartGroup.append("g")
             .attr("transform", `translate(0, ${height})`)
             .call(bottomAxis);
 
-        chartGroup.append("g")
+        var yAxis = chartGroup.append("g")
             .call(leftAxis);
 
         // Append initial data
@@ -219,22 +221,19 @@ function drawScatter() {
 
         // Create x labels
         var povertyLabel = xLabelsGroup.append("text")
-            .attr("x", width / 2)
-            .attr("y", height + 40)
+            .attr("y", 15)
             .attr("value", "poverty")
             .classed("active", true)
             .text("Percent At or Below Poverty Rate");
 
         var ageLabel = xLabelsGroup.append("text")
-            .attr("x", width / 2)
-            .attr("y", height + 60)
+            .attr("y", 35)
             .attr("value", "age")
             .classed("inactive", true)
             .text("Median Age");
 
         var incomeLabel = xLabelsGroup.append("text")
-            .attr("x", width / 2)
-            .attr("y", height + 80)
+            .attr("y", 55)
             .attr("value", "income")
             .classed("inactive", true)
             .text("Median Household Income");
