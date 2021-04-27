@@ -110,28 +110,28 @@ function drawScatter() {
     function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
 
         if (chosenXAxis === "poverty") {
-            var xLabel = "% in Poverty:";
+            var xLabel = "In Poverty (%): ";
         }
         else if (chosenXAxis === "age") {
-            var xLabel = "Median Age:";
+            var xLabel = "Median Age: ";
         }
         else {
-            var xLabel = "Median Household Income";
+            var xLabel = "Median Household Income: ";
         };
 
         if (chosenYAxis === "obesity") {
-            var yLabel = "Obesity:";
+            var yLabel = "Obesity (%): ";
         }
         else if (chosenYAxis === "smokes") {
-            var yLabel = "Smokes:";
+            var yLabel = "Smokers (%): ";
         }
         else {
-            var yLabel = "Lacks Healthcare:";
+            var yLabel = "Lacks Healthcare (%): ";
         };
     
         var toolTip = d3.tip()
         .attr("class", "d3-tip")
-        .offset([120, -60])
+        .offset([80, -60])
         .html(function(d) {
             return (`${d.state}<br>${xLabel} ${d[chosenXAxis]}<br>${yLabel} ${d[chosenYAxis]}`);
         });
@@ -140,7 +140,7 @@ function drawScatter() {
         
         // on mouseover event
         circlesGroup.on("mouseover", function(data) {
-        toolTip.show(data);
+        toolTip.show(data, this);
         })
         // on mouseout event
         .on("mouseout", function(data, index) {
