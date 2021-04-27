@@ -11,14 +11,14 @@ function drawScatter() {
     }
 
     // Create SVG area based on window size
-    var svgWidth = window.innerWidth * 0.9;
-    var svgHeight = window.innerHeight * 0.9;
+    var svgWidth = window.innerWidth * 0.8;
+    var svgHeight = window.innerHeight;
 
     var margin = {
         top: 50,
         right: 100,
-        bottom: 80,
-        left: 100
+        bottom: 120,
+        left:80
     };
 
     var height = svgHeight - margin.top - margin.bottom;
